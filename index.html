@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071522">
+<link rel="manifest" href="./manifest.json">
 <title>Shuffle Lab — 52 carte, infinite possibilità</title>
 <style>
 :root{--bg:#071522;--panel:#10263a;--panel2:#0c1e30;--line:#24435c;--text:#eaf5ff;--muted:#9bb5ca;--blue:#68b9ef;--blue2:#2e83c5;--ice:#c8eaff;--red:#f18b9a;--green:#79d8c0}
@@ -115,4 +117,14 @@ $('deleteAll').onclick=()=>{if(records.length&&confirm('Vuoi eliminare definitiv
 try{let stored=JSON.parse(localStorage.getItem('shuffleLabRecords')||'[]');if(Array.isArray(stored))records=stored.filter(r=>r&&Array.isArray(r.cards)&&!valid(r.cards))}catch(e){}
 renderPicker();update();
 </script>
+ 
+ <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .catch(error => console.error('Errore PWA:', error));
+  });
+}
+</script>
+ 
 </body></html>
