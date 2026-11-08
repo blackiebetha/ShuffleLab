@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shuffle Lab — 52 carte, infinite possibilità</title>
+<style>
+:root{--bg:#071522;--panel:#10263a;--panel2:#0c1e30;--line:#24435c;--text:#eaf5ff;--muted:#9bb5ca;--blue:#68b9ef;--blue2:#2e83c5;--ice:#c8eaff;--red:#f18b9a;--green:#79d8c0}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#153753 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1160px;margin:auto;padding:28px 18px 60px}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:22px}.eyebrow{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.18em}.hero h1{font-size:clamp(32px,6vw,54px);line-height:1;margin:8px 0}.hero p{color:var(--muted);margin:10px 0 0}.mark{border:1px solid var(--line);border-radius:16px;padding:12px 16px;color:var(--ice);font-size:13px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.panel{background:linear-gradient(145deg,rgba(17,42,63,.97),rgba(10,29,46,.97));border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 12px 32px #0003}.panel h2{font-size:18px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px;margin:0 0 16px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.stat{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px}.stat b{display:block;font-size:24px;color:var(--ice)}.stat span{color:var(--muted);font-size:11px}
+label{display:block;color:var(--ice);font-size:12px;font-weight:700;margin:12px 0 6px}input,textarea,select{width:100%;background:#081a2a;border:1px solid #31516b;border-radius:10px;padding:11px 12px;color:var(--text);font:inherit;outline:none}textarea{min-height:94px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #68b9ef22}
+button{border:1px solid #3b7198;background:#17466b;color:#eff9ff;border-radius:10px;padding:10px 14px;font-weight:750;cursor:pointer;font:inherit}button:hover{background:#205b87}button.secondary{background:#0b2032;border-color:var(--line);color:var(--ice)}button.danger{background:#391f30;border-color:#714052;color:#ffdce4}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.message{min-height:24px;margin-top:10px;font-size:13px;color:var(--muted)}.message.good{color:var(--green)}.message.bad{color:var(--red)}
+.cardgrid{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:4px;margin-top:12px}.pick{padding:5px 0;border-radius:6px;background:#eaf5ff;color:#142d43;border:1px solid #a8c6dc;font-size:12px;font-weight:800}.pick.red{color:#c53d55}.pick:disabled{opacity:.23;cursor:not-allowed;text-decoration:line-through}
+.list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#0a1e30;border:1px solid var(--line);padding:10px 12px;border-radius:11px}.item small{color:var(--muted)}.pill{font-size:11px;color:var(--ice);border:1px solid #315d7c;border-radius:30px;padding:3px 8px}
+.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:650}td{color:var(--ice)}.bar{height:8px;background:#071522;border-radius:8px;overflow:hidden;min-width:90px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#367eae,#8dd4ff)}
+.note{font-size:12px;color:var(--muted);margin-top:12px}.hidden{display:none!important}.full{grid-column:1/-1}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}.empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+@media(max-width:780px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.hero{align-items:flex-start;flex-direction:column}.cardgrid{grid-template-columns:repeat(7,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero"><div><div class="eyebrow">52 CARDS · INFINITE POSSIBILITIES</div><h1>SHUFFLE LAB</h1><p>Il diario dei tuoi mescolamenti. Registra, confronta, scopri.</p></div><div class="mark">♠ ♥ ♣ ♦ &nbsp; LAB / 001</div></header>
+<div class="stats">
+ <div class="stat"><b id="total">0</b><span>MESCOLAMENTI</span></div>
+ <div class="stat"><b id="unique">0</b><span>SEQUENZE UNICHE</span></div>
+ <div class="stat"><b id="repeats">0</b><span>RIPETIZIONI ESATTE</span></div>
+ <div class="stat"><b id="best">—</b><span>PIÙ SIMILI TRA LORO</span></div>
+</div>
+<div class="grid">
+<section class="panel">
+ <h2>01 / Registra un mescolamento</h2><p class="sub">Inserisci l'ordine delle 52 carte. Puoi scriverlo oppure selezionare le carte qui sotto.</p>
+ <label for="label">Nome o nota (facoltativo)</label><input id="label" maxlength="60" placeholder="Es. Mescolamento dopo 7 riffle shuffle">
+ <label for="sequence">Sequenza delle carte</label>
+ <textarea id="sequence" placeholder="Esempio: A♠, 2♠, 3♠, ...&#10;Puoi usare A, K, Q, J, 10–2 e i semi ♠ ♥ ♦ ♣. Separale con spazi, virgole o a capo."></textarea>
+ <div class="actions"><button id="save">＋ Salva mescolamento</button><button class="secondary" id="clearInput">Pulisci</button><button class="secondary" id="sort">Ordine iniziale standard</button></div>
+ <div class="message" id="entryMsg">Servono tutte le 52 carte, ciascuna esattamente una volta.</div>
+ <div class="topline" style="margin-top:18px"><div><b>Selezione rapida</b><div class="sub" style="margin:2px 0 0">Tocca le carte nell'ordine in cui le trovi.</div></div><span class="pill" id="pickedCount">0 / 52</span></div>
+ <div class="cardgrid" id="picker"></div>
+ <div class="actions"><button class="secondary" id="undo">Annulla ultima</button><button class="secondary" id="pickerClear">Azzera selezione</button><button class="secondary" id="usePicked">Usa selezione nel campo</button></div>
+ <p class="note">Notazione: A = asso, K = re, Q = donna, J = fante. I semi sono ♠ picche, ♥ cuori, ♦ quadri, ♣ fiori. Sono accettati anche AS, KH, 10D, 7C ecc.</p>
+</section>
+<section class="panel">
+ <h2>02 / Archivio</h2><p class="sub">I tuoi dati restano salvati in questo browser su questo dispositivo.</p>
+ <div class="actions"><button class="secondary" id="export">Esporta CSV</button><button class="secondary" id="backup">Backup JSON</button><button class="secondary" id="importBtn">Importa JSON</button><input type="file" id="file" accept=".json,application/json" class="hidden"></div>
+ <div id="archive" class="list"><div class="empty">Ancora nessun mescolamento registrato.</div></div>
+ <div class="actions"><button class="danger" id="deleteAll">Elimina tutto</button></div>
+ <p class="note">Esporta periodicamente un backup se vuoi conservare lo storico anche cambiando browser o dispositivo.</p>
+</section>
+<section class="panel full">
+ <h2>03 / Confronto tra mescolamenti</h2><p class="sub">La distanza qui è il numero di carte che occupano una posizione diversa. 52/52 significa che nessuna carta è rimasta al suo posto.</p>
+ <div id="comparison" class="empty">Registra almeno due mescolamenti per vedere il confronto.</div>
+</section>
+<section class="panel full">
+ <h2>04 / Analisi delle posizioni</h2><p class="sub">Quante volte ogni carta è comparsa in ciascuna posizione? Le statistiche si aggiornano con il tuo archivio.</p>
+ <div id="positions" class="empty">Registra almeno un mescolamento per iniziare l'analisi.</div>
+</section>
+</div>
+<p class="note" style="text-align:center;margin-top:20px">SHUFFLE LAB · Un esperimento personale sulla casualità. Le statistiche descrivono i dati raccolti: non dimostrano da sole che il mescolamento sia perfettamente casuale.</p>
+</div>
+<script>
+const suits=['♠','♥','♦','♣'], ranks=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const deck=suits.flatMap(s=>ranks.map(r=>r+s));
+const names={A:'Asso',K:'Re',Q:'Donna',J:'Fante'};
+let records=[],picked=[];
+const $=id=>document.getElementById(id);
+const normAliases={'S':'♠','SPADE':'♠','SPADES':'♠','P':'♠','H':'♥','HEART':'♥','HEARTS':'♥','C':'♣','CLUB':'♣','CLUBS':'♣','F':'♣','D':'♦','DIAMOND':'♦','DIAMONDS':'♦','Q':'Q','J':'J','K':'K','A':'A'};
+function parseCard(token){
+ let t=token.trim().toUpperCase().replace(/10/,'T').replace(/♠|♤/g,'S').replace(/♥|♡/g,'H').replace(/♦|♢/g,'D').replace(/♣|♧/g,'C').replace(/[^A-Z0-9]/g,'');
+ if(!t)return null;
+ let suit=t.slice(-1),rank=t.slice(0,-1); if(!'SHDC'.includes(suit))return null;
+ if(rank==='T')rank='10'; if(!ranks.includes(rank))return null;
+ return rank+({'S':'♠','H':'♥','D':'♦','C':'♣'}[suit]);
+}
+function parseSequence(str){return str.split(/[\s,;|]+/).filter(Boolean).map(parseCard)}
+function valid(seq){if(seq.length!==52)return 'Hai inserito '+seq.length+' carte: ne servono 52.';let bad=seq.findIndex(x=>!x);if(bad>=0)return 'Non riconosco la carta numero '+(bad+1)+'.';let seen=new Set(seq);if(seen.size!==52){let dup=seq.filter((x,i)=>seq.indexOf(x)!==i);return 'Ci sono carte duplicate: '+[...new Set(dup)].join(', ')+'.';}return ''}
+function pretty(c){return c.slice(0,-1)+c.slice(-1)}
+function update(){
+ $('total').textContent=records.length;
+ $('unique').textContent=new Set(records.map(r=>r.cards.join(' '))).size;
+ $('repeats').textContent=records.length-new Set(records.map(r=>r.cards.join(' '))).size;
+ let pair=closestPair();$('best').textContent=pair?pair.distance+'/52':'—';
+ renderArchive();renderCompare();renderPositions();saveLocal();
+}
+function saveLocal(){try{localStorage.setItem('shuffleLabRecords',JSON.stringify(records))}catch(e){}}
+function closestPair(){if(records.length<2)return null;let best=null;for(let i=0;i<records.length;i++)for(let j=i+1;j<records.length;j++){let d=records[i].cards.reduce((n,c,k)=>n+(c!==records[j].cards[k]),0);if(!best||d<best.distance)best={a:i,b:j,distance:d}}return best}
+function renderArchive(){
+ let el=$('archive');if(!records.length){el.innerHTML='<div class="empty">Ancora nessun mescolamento registrato.</div>';return}
+ el.innerHTML='';[...records].reverse().forEach(r=>{let d=document.createElement('div');d.className='item';let left=document.createElement('div');left.innerHTML='<b>#'+r.id+' '+escapeHtml(r.name||'Senza nome')+'</b><br><small>'+new Date(r.date).toLocaleString('it-IT')+'</small>';let right=document.createElement('div');right.style.display='flex';right.style.gap='6px';let view=document.createElement('button');view.className='secondary';view.textContent='Vedi';view.onclick=()=>{$('sequence').value=r.cards.join(' ');$('label').value=r.name||'';window.scrollTo({top:0,behavior:'smooth'})};let del=document.createElement('button');del.className='danger';del.textContent='×';del.title='Elimina';del.onclick=()=>{if(confirm('Eliminare il mescolamento #'+r.id+'?')){records=records.filter(x=>x.id!==r.id);update()}};right.append(view,del);d.append(left,right);el.append(d)});
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderCompare(){
+ let el=$('comparison');if(records.length<2){el.className='empty';el.textContent='Registra almeno due mescolamenti per vedere il confronto.';return}
+ el.className='tablewrap';let rows=[];for(let i=0;i<records.length;i++)for(let j=i+1;j<records.length;j++){let same=records[i].cards.reduce((n,c,k)=>n+(c===records[j].cards[k]),0),diff=52-same;rows.push({i,j,same,diff})}
+ rows.sort((a,b)=>a.diff-b.diff);let shown=rows.slice(0,30);
+ el.innerHTML='<table><thead><tr><th>Confronto</th><th>Stessa posizione</th><th>Posizione diversa</th><th>Differenza</th></tr></thead><tbody>'+shown.map(x=>'<tr><td>#'+records[x.i].id+' ↔ #'+records[x.j].id+'</td><td>'+x.same+'/52</td><td>'+x.diff+'/52</td><td><div class="bar"><i style="width:'+(x.diff/52*100)+'%"></i></div></td></tr>').join('')+'</tbody></table><p class="note">Mostro le 30 coppie più simili. Con '+records.length+' mescolamenti esistono '+rows.length+' confronti a coppie.</p>';
+}
+function renderPositions(){
+ let el=$('positions');if(!records.length){el.className='empty';el.textContent='Registra almeno un mescolamento per iniziare l’analisi.';return}
+ let counts=Array.from({length:52},()=>({}));records.forEach(r=>r.cards.forEach((c,i)=>counts[i][c]=(counts[i][c]||0)+1));
+ let rows=counts.map((o,i)=>{let arr=Object.entries(o).sort((a,b)=>b[1]-a[1]);let top=arr[0];return {pos:i+1,card:top[0],count:top[1],pct:top[1]/records.length*100,distinct:arr.length}}).sort((a,b)=>b.pct-a.pct);
+ el.className='tablewrap';el.innerHTML='<table><thead><tr><th>Posizione</th><th>Carta più frequente</th><th>Frequenza</th><th>Carte diverse viste</th></tr></thead><tbody>'+rows.map(x=>'<tr><td>'+x.pos+'</td><td>'+x.card+'</td><td>'+x.count+'/'+records.length+' <div class="bar"><i style="width:'+x.pct+'%"></i></div></td><td>'+x.distinct+'</td></tr>').join('')+'</tbody></table><p class="note">Attenzione: con pochi mescolamenti le frequenze oscillano molto. La tabella mostra la carta più frequente per ogni posizione, non una previsione.</p>';
+}
+function setMsg(msg,good){$('entryMsg').textContent=msg;$('entryMsg').className='message '+(good?'good':'bad')}
+$('save').onclick=()=>{let seq=parseSequence($('sequence').value),err=valid(seq);if(err){setMsg(err,false);return}let id=records.reduce((m,r)=>Math.max(m,r.id),0)+1;records.push({id,name:$('label').value.trim(),date:new Date().toISOString(),cards:seq});$('label').value='';$('sequence').value='';picked=[];renderPicker();setMsg('Mescolamento #'+id+' salvato correttamente.',true);update()};
+$('clearInput').onclick=()=>{$('sequence').value='';$('label').value='';setMsg('Campo svuotato.',true)};
+$('sort').onclick=()=>{$('sequence').value=deck.join(' ');setMsg('Ordine standard inserito. Puoi modificarlo prima di salvare.',true)};
+function renderPicker(){let el=$('picker');el.innerHTML='';deck.forEach(c=>{let b=document.createElement('button');b.className='pick '+('♥♦'.includes(c.slice(-1))?'red':'');b.textContent=c;b.disabled=picked.includes(c);b.onclick=()=>{picked.push(c);$('pickedCount').textContent=picked.length+' / 52';renderPicker()};el.append(b)});$('pickedCount').textContent=picked.length+' / 52'}
+$('undo').onclick=()=>{picked.pop();renderPicker()};$('pickerClear').onclick=()=>{picked=[];renderPicker()};$('usePicked').onclick=()=>{if(!picked.length){setMsg('Seleziona prima qualche carta.',false);return}$('sequence').value=picked.join(' ');setMsg('Sequenza trasferita nel campo. Completa le 52 carte e salva.',true)};
+$('export').onclick=()=>{let csv='id,nome,data,sequenza\n'+records.map(r=>[r.id,'"'+(r.name||'').replace(/"/g,'""')+'"',r.date,'"'+r.cards.join(' ')+'"'].join(',')).join('\n');download('shuffle-lab.csv',csv,'text/csv')};
+$('backup').onclick=()=>download('shuffle-lab-backup.json',JSON.stringify(records,null,2),'application/json');
+function download(name,data,type){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([data],{type}));a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+$('importBtn').onclick=()=>$('file').click();$('file').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let data=JSON.parse(await f.text());if(!Array.isArray(data)||data.some(r=>!r.cards||valid(r.cards)))throw Error('Formato non valido');if(confirm('Importare '+data.length+' mescolamenti? Quelli con ID già esistente verranno rinumerati.')){let next=records.reduce((m,r)=>Math.max(m,r.id),0)+1;data.forEach(r=>{r.id=next++;records.push(r)});update();setMsg('Importazione completata.',true)}}catch(err){setMsg('Impossibile importare: '+err.message,false)}e.target.value=''};
+$('deleteAll').onclick=()=>{if(records.length&&confirm('Vuoi eliminare definitivamente tutto lo storico salvato in questo browser?')){records=[];update();setMsg('Archivio eliminato.',true)}};
+try{let stored=JSON.parse(localStorage.getItem('shuffleLabRecords')||'[]');if(Array.isArray(stored))records=stored.filter(r=>r&&Array.isArray(r.cards)&&!valid(r.cards))}catch(e){}
+renderPicker();update();
+</script>
+</body></html>
