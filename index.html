@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#071522">
 <link rel="manifest" href="./manifest.json">
-<title>Shuffle Lab — 52 carte, infinite possibilità</title>
+<title>Shuffle Lab 4.0 — Advanced Statistics</title>
 <style>
 :root{color-scheme:dark;--bg:#061321;--panel:#0d2033;--panel2:#102941;--line:#1d3d58;--text:#eaf6ff;--muted:#91abc1;--blue:#65c4f4;--blue2:#318fca;--ice:#c9efff;--red:#ff8fa8;--green:#7ce0c6;--shadow:0 18px 50px #0005}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% -8%,#16436a 0,transparent 35%),radial-gradient(ellipse at 100% 30%,#102e49 0,transparent 30%),var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -18,15 +18,33 @@ label{display:block;color:var(--ice);font-size:12px;font-weight:750;margin:13px 
 button.action{border:1px solid #3c86b3;background:linear-gradient(135deg,#1c6592,#17466b);color:#effaff;border-radius:11px;padding:10px 15px;font-weight:800}button.action:hover{filter:brightness(1.15)}button.secondary{background:#0a1d2e;border:1px solid var(--line);color:var(--ice);border-radius:11px;padding:10px 14px;font-weight:700}button.secondary:hover{background:#12334c;border-color:#3b779e}button.danger{background:#351e31;border:1px solid #70405c;color:#ffdce8;border-radius:11px;padding:9px 12px;font-weight:700}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.message{min-height:24px;margin-top:10px;font-size:13px;color:var(--muted)}.message.good{color:var(--green)}.message.bad{color:var(--red)}.cardgrid{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:5px;margin-top:12px}.pick{padding:7px 0;border-radius:7px;background:linear-gradient(160deg,#f2f9ff,#cfe6f5);color:#142d43;border:1px solid #9ebfd5;font-size:12px;font-weight:850}.pick.red{color:#c53d55}.pick:disabled{opacity:.2;cursor:not-allowed;text-decoration:line-through}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}.pill{font-size:11px;color:var(--ice);border:1px solid #315d7c;border-radius:30px;padding:4px 9px;white-space:nowrap}.list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#091b2b;border:1px solid var(--line);padding:11px 12px;border-radius:12px}.item small{color:var(--muted)}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;width:100%;font-size:13px;min-width:440px}th,td{text-align:left;padding:10px 11px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:700;background:#0a1d2d}td{color:var(--ice)}tr:last-child td{border-bottom:0}.bar{height:7px;background:#061321;border-radius:8px;overflow:hidden;min-width:90px;margin-top:4px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#318fca,#a1e3ff);border-radius:8px}.note{font-size:12px;color:var(--muted);margin-top:12px}.hidden{display:none!important}.full{grid-column:1/-1}.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed #31516b;border-radius:13px;background:#091b2a66}.searchrow{display:flex;gap:10px;align-items:center;margin-top:12px}.searchrow input{max-width:360px}.footer{font-size:11px;color:#718da4;text-align:center;margin-top:30px;letter-spacing:.04em}
 @media(max-width:850px){.app{padding:20px 16px 100px}.grid,.dashboard-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cardgrid{grid-template-columns:repeat(7,minmax(0,1fr))}.welcome-mark{display:none}}
 @media(max-width:560px){.app{padding:16px 13px 100px}.topbar{margin-bottom:23px}.top-status{font-size:0;padding:10px}.top-status .status-text{display:none}.welcome{margin-bottom:18px}.welcome h1{font-size:34px}.nav{position:fixed;z-index:20;bottom:10px;left:10px;right:10px;width:auto;justify-content:space-around;margin:0;padding:6px;background:#081827f2;backdrop-filter:blur(16px);box-shadow:0 10px 35px #0009}.nav button{flex:1;padding:11px 4px;font-size:11px}.nav button .nav-icon{display:block;font-size:17px;margin-bottom:1px}.panel{padding:16px;border-radius:17px}.quick-actions{grid-template-columns:1fr 1fr}.item{align-items:flex-start}.item button{padding:8px 10px}.searchrow{display:block}.searchrow input{max-width:none}}
+
+/* SHUFFLE LAB 4.0 · statistiche avanzate */
+.analytics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.analytics-card{min-width:0}
+.chart-scroll{overflow-x:auto;padding:12px 4px 4px;border:1px solid var(--line);border-radius:13px;background:#07182788}
+.position-chart{display:grid;grid-template-columns:repeat(52,minmax(12px,1fr));align-items:end;gap:4px;min-width:720px;height:190px;padding:12px 8px 0}
+.chart-col{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;min-width:0}
+.chart-value{font-size:9px;color:var(--muted);height:12px;line-height:12px}
+.chart-bar{width:100%;min-height:2px;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#a6e5ff,#318fca);box-shadow:0 0 10px #54b8eb22}
+.chart-label{font-size:9px;color:#8faac0;padding-bottom:5px}
+.chart-legend{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-top:9px}
+.distribution-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.dist-row{display:grid;grid-template-columns:44px minmax(50px,1fr) 42px;align-items:center;gap:8px;font-size:11px;color:var(--ice)}
+.dist-track{height:7px;background:#061321;border-radius:8px;overflow:hidden}.dist-track i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#318fca,#a1e3ff)}
+.metric-line{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}.metric-line:last-child{border-bottom:0}.metric-line span{color:var(--muted)}.metric-line b{color:var(--ice);text-align:right;font-variant-numeric:tabular-nums}
+.insight{border:1px solid #2b5877;background:linear-gradient(120deg,#10304a,#0a1d2d);border-radius:13px;padding:13px 15px;color:#b8d8eb;font-size:12px;margin-top:12px}
+@media(max-width:850px){.analytics-grid{grid-template-columns:1fr}.distribution-list{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header class="topbar">
- <div class="brand"><div class="brandmark">♠</div><div><div class="brandname">SHUFFLE LAB</div><div class="brandtag">52 CARDS · INFINITE POSSIBILITIES</div></div></div>
+ <div class="brand"><div class="brandmark">♠</div><div><div class="brandname">SHUFFLE LAB</div><div class="brandtag">52 CARDS · ADVANCED STATISTICS</div></div></div>
  <div class="top-status"><span class="statusdot"></span><span class="status-text">LABORATORIO PERSONALE · DATI LOCALI</span></div>
 </header>
-<div class="welcome"><div><div class="eyebrow">Il tuo spazio di ricerca</div><h1>Ogni shuffle racconta<br>una storia.</h1><p>Registra i tuoi mescolamenti, confronta le sequenze e osserva come si distribuiscono le 52 carte.</p></div><div class="welcome-mark"><strong>LAB / 001</strong>♠ &nbsp;♥ &nbsp;♣ &nbsp;♦</div></div>
+<div class="welcome"><div><div class="eyebrow">Advanced Statistics · Versione 4.0</div><h1>Ogni shuffle racconta<br>una storia.</h1><p>Registra i tuoi mescolamenti, confronta le sequenze e osserva come si distribuiscono le 52 carte.</p></div><div class="welcome-mark"><strong>LAB / 004</strong>♠ &nbsp;♥ &nbsp;♣ &nbsp;♦</div></div>
 <nav class="nav" aria-label="Navigazione principale">
  <button class="active" data-view="home"><span class="nav-icon">⌂</span> Panoramica</button>
  <button data-view="register"><span class="nav-icon">＋</span> Registra</button>
@@ -77,13 +95,25 @@ button.action{border:1px solid #3c86b3;background:linear-gradient(135deg,#1c6592
  </section>
 </section>
 <section class="view" id="view-analysis">
- <div class="section-head"><div><div class="eyebrow">03 / Osservazione</div><h2>Analisi e confronti</h2><p>Esplora le somiglianze tra sequenze e la distribuzione delle carte.</p></div></div>
- <section class="panel"><h3>Confronto tra mescolamenti</h3><p class="sub">La distanza è il numero di carte che occupano una posizione diversa. 52/52 significa che nessuna carta è rimasta al suo posto.</p><div id="comparison" class="empty">Registra almeno due mescolamenti per vedere il confronto.</div></section>
+ <div class="section-head"><div><div class="eyebrow">04 / Advanced Statistics</div><h2>Analisi e confronti</h2><p>Esplora distribuzioni, posizioni, ripetizioni e comportamento dei tuoi mescolamenti.</p></div></div>
+ <div class="stats">
+  <div class="stat"><b id="avgFixed">—</b><span>CARTE FERME IN MEDIA</span></div>
+  <div class="stat"><b id="avgDistance">—</b><span>DISTANZA MEDIA TRA COPPIE</span></div>
+  <div class="stat"><b id="minFixed">—</b><span>MINIMO CARTE FERME</span></div>
+  <div class="stat"><b id="maxFixed">—</b><span>MASSIMO CARTE FERME</span></div>
+ </div>
+ <div class="analytics-grid">
+  <section class="panel analytics-card"><h3>Distribuzione di una carta</h3><p class="sub">Scegli una carta per vedere in quali posizioni è comparsa nel tuo archivio.</p><label for="advancedCardSelect">Carta da analizzare</label><select id="advancedCardSelect"></select><div id="cardPositionChart" class="empty" style="margin-top:12px">Registra almeno un mescolamento per visualizzare il grafico.</div><div class="chart-legend"><span>Ogni colonna = una posizione nel mazzo</span><span id="cardExpected">Atteso: —</span></div></section>
+  <section class="panel analytics-card"><h3>Distribuzione in una posizione</h3><p class="sub">Scegli una posizione e scopri quali carte sono apparse più spesso lì.</p><label for="advancedPositionSelect">Posizione del mazzo</label><select id="advancedPositionSelect"></select><div id="positionCardChart" style="margin-top:12px"><div class="empty">Registra almeno un mescolamento per iniziare.</div></div></section>
+  <section class="panel analytics-card"><h3>Carte rimaste al loro posto</h3><p class="sub">Confronta ogni mescolamento con l'ordine standard iniziale del mazzo.</p><div id="fixedDistribution"><div class="empty">Registra almeno un mescolamento per iniziare.</div></div><div class="insight">In un modello teorico di permutazione uniforme, il numero medio di carte che restano nella posizione iniziale è circa 1. È un riferimento matematico, non una prova che i tuoi mescolamenti siano casuali.</div></section>
+  <section class="panel analytics-card"><h3>Indicatori del campione</h3><p class="sub">Riepilogo quantitativo del tuo archivio.</p><div id="sampleMetrics"><div class="empty">Registra almeno un mescolamento per iniziare.</div></div><div class="insight">Le frequenze diventano più stabili con molti dati. Con pochi mescolamenti, differenze anche grandi possono essere normali.</div></section>
+ </div>
+ <section class="panel" style="margin-top:16px"><h3>Confronto tra mescolamenti</h3><p class="sub">La distanza è il numero di carte che occupano una posizione diversa. 52/52 significa che nessuna carta è rimasta al suo posto.</p><div id="comparison" class="empty">Registra almeno due mescolamenti per vedere il confronto.</div></section>
  <section class="panel" style="margin-top:16px"><h3>Analisi delle posizioni</h3><p class="sub">Quante volte ogni carta è comparsa in ciascuna posizione? Le statistiche si aggiornano con il tuo archivio.</p><div id="positions" class="empty">Registra almeno un mescolamento per iniziare l'analisi.</div></section>
  <section class="panel" style="margin-top:16px"><h3>Analisi della singola carta</h3><p class="sub">Scegli una carta e scopri dove è comparsa nei tuoi mescolamenti.</p><label for="cardAnalysisSelect">Seleziona una carta</label><select id="cardAnalysisSelect"></select><div id="cardAnalysis" class="empty" style="margin-top:14px">Registra almeno un mescolamento per iniziare.</div></section>
 </section>
 </main>
-<footer class="footer">SHUFFLE LAB · Un esperimento personale sulla casualità. Le statistiche descrivono i dati raccolti: non dimostrano da sole che il mescolamento sia perfettamente casuale.</footer>
+<footer class="footer">SHUFFLE LAB 4.0 · Un esperimento personale sulla casualità. Le statistiche descrivono i dati raccolti: non dimostrano da sole che il mescolamento sia perfettamente casuale.</footer>
 </div>
 <script>
 const suits=['♠','♥','♦','♣'], ranks=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
@@ -107,7 +137,7 @@ function update(){
  $('unique').textContent=new Set(records.map(r=>r.cards.join(' '))).size;
  $('repeats').textContent=records.length-new Set(records.map(r=>r.cards.join(' '))).size;
  let pair=closestPair();$('best').textContent=pair?pair.distance+'/52':'—';
- renderArchive();renderCompare();renderPositions();renderCardAnalysis();saveLocal();
+ renderArchive();renderCompare();renderPositions();renderCardAnalysis();renderAdvancedStats();saveLocal();
 }
 function saveLocal(){try{localStorage.setItem('shuffleLabRecords',JSON.stringify(records))}catch(e){}}
 function closestPair(){if(records.length<2)return null;let best=null;for(let i=0;i<records.length;i++)for(let j=i+1;j<records.length;j++){let d=records[i].cards.reduce((n,c,k)=>n+(c!==records[j].cards[k]),0);if(!best||d<best.distance)best={a:i,b:j,distance:d}}return best}
@@ -137,6 +167,37 @@ function renderCardAnalysis(){
  el.className='tablewrap';el.innerHTML=`<div class="stats" style="padding:12px 12px 0"><div class="stat"><b>${occurrences}</b><span>PRESENZE REGISTRATE</span></div><div class="stat"><b>${commonPositions.length?commonPositions.map(x=>x.position).join(', '):'—'}</b><span>POSIZIONE/I PIÙ FREQUENTE/I</span></div></div><table><thead><tr><th>Posizione</th><th>Frequenza</th><th>Distribuzione</th></tr></thead><tbody>${positions.map((count,i)=>`<tr><td>${i+1}</td><td>${count}/${records.length}</td><td><div class="bar"><i style="width:${count/records.length*100}%"></i></div></td></tr>`).join('')}</tbody></table><p class="note" style="padding:0 12px 12px">Ogni riga indica quante volte ${card} è comparsa in quella posizione.</p>`;
 }
 $('cardAnalysisSelect').innerHTML=deck.map(c=>`<option value="${c}">${c}</option>`).join('');$('cardAnalysisSelect').onchange=renderCardAnalysis;
+$('advancedCardSelect').innerHTML=deck.map(c=>`<option value="${c}">${c}</option>`).join('');
+$('advancedPositionSelect').innerHTML=Array.from({length:52},(_,i)=>`<option value="${i}">Posizione ${i+1}</option>`).join('');
+$('advancedCardSelect').onchange=renderAdvancedStats;
+$('advancedPositionSelect').onchange=renderAdvancedStats;
+function fixedCards(record){return record.cards.reduce((n,c,i)=>n+(c===deck[i]?1:0),0)}
+function renderAdvancedStats(){
+ const count=records.length;
+ const avgFixedEl=$('avgFixed'),avgDistanceEl=$('avgDistance'),minFixedEl=$('minFixed'),maxFixedEl=$('maxFixed');
+ if(!count){[avgFixedEl,avgDistanceEl,minFixedEl,maxFixedEl].forEach(el=>el.textContent='—');$('cardPositionChart').className='empty';$('cardPositionChart').textContent='Registra almeno un mescolamento per visualizzare il grafico.';$('cardExpected').textContent='Atteso: —';$('positionCardChart').innerHTML='<div class="empty">Registra almeno un mescolamento per iniziare.</div>';$('fixedDistribution').innerHTML='<div class="empty">Registra almeno un mescolamento per iniziare.</div>';$('sampleMetrics').innerHTML='<div class="empty">Registra almeno un mescolamento per iniziare.</div>';return;}
+ const fixed=records.map(fixedCards),avg=fixed.reduce((a,b)=>a+b,0)/count;
+ avgFixedEl.textContent=avg.toFixed(2)+'/52';minFixedEl.textContent=Math.min(...fixed);maxFixedEl.textContent=Math.max(...fixed);
+ let pairTotal=0,pairCount=0;for(let i=0;i<count;i++)for(let j=i+1;j<count;j++){pairTotal+=records[i].cards.reduce((n,c,k)=>n+(c!==records[j].cards[k]),0);pairCount++;}
+ avgDistanceEl.textContent=pairCount?(pairTotal/pairCount).toFixed(2)+'/52':'—';
+ // Distribuzione delle posizioni per la carta selezionata
+ const selected=$('advancedCardSelect').value||deck[0],positions=Array(52).fill(0);
+ records.forEach(r=>{const ix=r.cards.indexOf(selected);if(ix>=0)positions[ix]++;});
+ const maxPos=Math.max(1,...positions),expected=count/52;
+ $('cardPositionChart').className='chart-scroll';
+ $('cardPositionChart').innerHTML='<div class="position-chart">'+positions.map((v,i)=>`<div class="chart-col" title="Posizione ${i+1}: ${v} volte"><span class="chart-value">${v||''}</span><i class="chart-bar" style="height:${Math.max(v?3:1,v/maxPos*125)}px;opacity:${v?1:.25}"></i><span class="chart-label">${i+1}</span></div>`).join('')+'</div>';
+ $('cardExpected').textContent='Media teorica per posizione: '+expected.toFixed(2)+' su '+count;
+ // Distribuzione delle carte nella posizione scelta
+ const posIndex=Number($('advancedPositionSelect').value||0),freq={};records.forEach(r=>{const c=r.cards[posIndex];freq[c]=(freq[c]||0)+1;});
+ const sorted=Object.entries(freq).sort((a,b)=>b[1]-a[1]||deck.indexOf(a[0])-deck.indexOf(b[0]));
+ $('positionCardChart').innerHTML='<div class="metric-line"><span>Posizione analizzata</span><b>'+(posIndex+1)+'/52</b></div><div class="metric-line"><span>Carte diverse osservate</span><b>'+sorted.length+'/52</b></div><div class="distribution-list">'+sorted.map(([card,n])=>`<div class="dist-row"><b>${card}</b><div class="dist-track"><i style="width:${n/count*100}%"></i></div><span>${n} · ${(n/count*100).toFixed(1)}%</span></div>`).join('')+'</div><p class="note">La percentuale indica quante volte questa carta è stata osservata in posizione '+(posIndex+1)+'.</p>';
+ // Istogramma delle carte ferme: fasce per renderlo leggibile
+ const bins=[{label:'0',test:x=>x===0},{label:'1',test:x=>x===1},{label:'2',test:x=>x===2},{label:'3–4',test:x=>x>=3&&x<=4},{label:'5–8',test:x=>x>=5&&x<=8},{label:'9+',test:x=>x>=9}];
+ const values=bins.map(b=>({label:b.label,n:fixed.filter(b.test).length})),maxBin=Math.max(1,...values.map(x=>x.n));
+ $('fixedDistribution').innerHTML='<div class="distribution-list">'+values.map(x=>`<div class="dist-row"><b>${x.label}</b><div class="dist-track"><i style="width:${x.n/maxBin*100}%"></i></div><span>${x.n} · ${(x.n/count*100).toFixed(1)}%</span></div>`).join('')+'</div><p class="note">Numero di carte che, in ciascun mescolamento, sono rimaste nella stessa posizione dell’ordine standard.</p>';
+ const unique=new Set(records.map(r=>r.cards.join(' '))).size,repeats=count-unique;
+ $('sampleMetrics').innerHTML=`<div class="metric-line"><span>Mescolamenti registrati</span><b>${count}</b></div><div class="metric-line"><span>Sequenze uniche</span><b>${unique}</b></div><div class="metric-line"><span>Ripetizioni esatte oltre la prima</span><b>${repeats}</b></div><div class="metric-line"><span>Coppie confrontabili</span><b>${pairCount}</b></div><div class="metric-line"><span>Media carte ferme</span><b>${avg.toFixed(2)} su 52</b></div><div class="metric-line"><span>Media distanza tra coppie</span><b>${pairCount?(pairTotal/pairCount).toFixed(2):'—'} su 52</b></div>`;
+}
 function setMsg(msg,good){$('entryMsg').textContent=msg;$('entryMsg').className='message '+(good?'good':'bad')}
 $('save').onclick=()=>{let seq=parseSequence($('sequence').value),err=valid(seq);if(err){setMsg(err,false);return}let id=records.reduce((m,r)=>Math.max(m,r.id),0)+1;records.push({id,name:$('label').value.trim(),date:new Date().toISOString(),cards:seq});$('label').value='';$('sequence').value='';picked=[];renderPicker();setMsg('Mescolamento #'+id+' salvato correttamente.',true);update();showView('home')};
 $('clearInput').onclick=()=>{$('sequence').value='';$('label').value='';setMsg('Campo svuotato.',true)};
