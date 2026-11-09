@@ -7,69 +7,83 @@
 <link rel="manifest" href="./manifest.json">
 <title>Shuffle Lab — 52 carte, infinite possibilità</title>
 <style>
-:root{--bg:#071522;--panel:#10263a;--panel2:#0c1e30;--line:#24435c;--text:#eaf5ff;--muted:#9bb5ca;--blue:#68b9ef;--blue2:#2e83c5;--ice:#c8eaff;--red:#f18b9a;--green:#79d8c0}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#153753 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
-.wrap{max-width:1160px;margin:auto;padding:28px 18px 60px}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:22px}.eyebrow{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.18em}.hero h1{font-size:clamp(32px,6vw,54px);line-height:1;margin:8px 0}.hero p{color:var(--muted);margin:10px 0 0}.mark{border:1px solid var(--line);border-radius:16px;padding:12px 16px;color:var(--ice);font-size:13px;white-space:nowrap}
-.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.panel{background:linear-gradient(145deg,rgba(17,42,63,.97),rgba(10,29,46,.97));border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 12px 32px #0003}.panel h2{font-size:18px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px;margin:0 0 16px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.stat{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px}.stat b{display:block;font-size:24px;color:var(--ice)}.stat span{color:var(--muted);font-size:11px}
-label{display:block;color:var(--ice);font-size:12px;font-weight:700;margin:12px 0 6px}input,textarea,select{width:100%;background:#081a2a;border:1px solid #31516b;border-radius:10px;padding:11px 12px;color:var(--text);font:inherit;outline:none}textarea{min-height:94px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #68b9ef22}
-button{border:1px solid #3b7198;background:#17466b;color:#eff9ff;border-radius:10px;padding:10px 14px;font-weight:750;cursor:pointer;font:inherit}button:hover{background:#205b87}button.secondary{background:#0b2032;border-color:var(--line);color:var(--ice)}button.danger{background:#391f30;border-color:#714052;color:#ffdce4}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.message{min-height:24px;margin-top:10px;font-size:13px;color:var(--muted)}.message.good{color:var(--green)}.message.bad{color:var(--red)}
-.cardgrid{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:4px;margin-top:12px}.pick{padding:5px 0;border-radius:6px;background:#eaf5ff;color:#142d43;border:1px solid #a8c6dc;font-size:12px;font-weight:800}.pick.red{color:#c53d55}.pick:disabled{opacity:.23;cursor:not-allowed;text-decoration:line-through}
-.list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#0a1e30;border:1px solid var(--line);padding:10px 12px;border-radius:11px}.item small{color:var(--muted)}.pill{font-size:11px;color:var(--ice);border:1px solid #315d7c;border-radius:30px;padding:3px 8px}
-.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:650}td{color:var(--ice)}.bar{height:8px;background:#071522;border-radius:8px;overflow:hidden;min-width:90px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#367eae,#8dd4ff)}
-.note{font-size:12px;color:var(--muted);margin-top:12px}.hidden{display:none!important}.full{grid-column:1/-1}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}.empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
-@media(max-width:780px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.hero{align-items:flex-start;flex-direction:column}.cardgrid{grid-template-columns:repeat(7,minmax(0,1fr))}}
+:root{color-scheme:dark;--bg:#061321;--panel:#0d2033;--panel2:#102941;--line:#1d3d58;--text:#eaf6ff;--muted:#91abc1;--blue:#65c4f4;--blue2:#318fca;--ice:#c9efff;--red:#ff8fa8;--green:#7ce0c6;--shadow:0 18px 50px #0005}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 12% -8%,#16436a 0,transparent 35%),radial-gradient(ellipse at 100% 30%,#102e49 0,transparent 30%),var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}.app{max-width:1240px;margin:auto;padding:26px 26px 100px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:30px}.brand{display:flex;align-items:center;gap:13px}.brandmark{width:46px;height:46px;display:grid;place-items:center;border:1px solid #39739b;border-radius:15px;background:linear-gradient(145deg,#16466a,#0b2238);color:var(--ice);font-size:20px;box-shadow:0 0 28px #3da9e522}.brandname{font-weight:900;letter-spacing:.16em;font-size:14px}.brandtag{color:var(--muted);font-size:11px;letter-spacing:.08em}.top-status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;border:1px solid var(--line);background:#0b1d2d99;padding:9px 13px;border-radius:30px}.statusdot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px #7ce0c6}
+.welcome{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin:8px 0 24px}.eyebrow{font-size:10px;letter-spacing:.22em;font-weight:850;color:var(--blue);text-transform:uppercase}.welcome h1{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.04em;margin:8px 0}.welcome p{color:var(--muted);margin:0;max-width:560px}.welcome-mark{text-align:right;color:#78c9f2;font-size:12px;letter-spacing:.15em}.welcome-mark strong{display:block;font-size:26px;color:var(--ice);letter-spacing:.04em}
+.nav{display:flex;gap:7px;padding:7px;background:#091a2a;border:1px solid var(--line);border-radius:15px;margin-bottom:22px;width:max-content;max-width:100%}.nav button{border:0;background:transparent;color:var(--muted);padding:10px 17px;border-radius:10px;font-weight:750;font-size:13px}.nav button.active,.nav button:hover{background:linear-gradient(135deg,#174b70,#123650);color:var(--ice);box-shadow:inset 0 0 0 1px #397da5}.view{display:none;animation:appear .22s ease}.view.active{display:block}@keyframes appear{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:4px 0 18px}.section-head h2{font-size:21px;margin:4px 0}.section-head p{margin:0;color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.panel{background:linear-gradient(145deg,#102a40ed,#0a1c2ded);border:1px solid var(--line);border-radius:20px;padding:21px;box-shadow:var(--shadow);min-width:0}.panel h3{font-size:16px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px;margin:0 0 16px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 18px}.stat{position:relative;overflow:hidden;background:linear-gradient(145deg,#102c44,#0a1c2c);border:1px solid #234965;border-radius:17px;padding:17px}.stat:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-38px;top:-42px;background:#55b9ed0c}.stat b{display:block;font-size:clamp(22px,3vw,30px);line-height:1.2;color:var(--ice);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.stat span{display:block;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.1em;margin-top:7px}
+.dashboard-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.welcome-card{min-height:220px;display:flex;flex-direction:column;justify-content:space-between;background:radial-gradient(circle at 90% 5%,#28658a55,transparent 40%),linear-gradient(135deg,#123b59,#0b2033 72%);border-color:#2b5877}.welcome-card h3{font-size:23px;max-width:400px;line-height:1.2;margin:8px 0}.welcome-card p{color:#a8c3d7;max-width:440px;margin:0 0 18px}.orb{font-size:40px;letter-spacing:9px;color:#9cddff;text-shadow:0 0 30px #4eb9f766}.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.quick{display:flex;flex-direction:column;justify-content:space-between;text-align:left;min-height:105px;background:#0a1d2e;border:1px solid var(--line);border-radius:16px;padding:15px;color:var(--text)}.quick:hover{border-color:#4c9bc7;background:#102a40}.quick span{font-size:22px;color:var(--blue)}.quick b{font-size:13px}.quick small{color:var(--muted);font-size:11px}.panel h2{font-size:18px;margin:0 0 5px}
+label{display:block;color:var(--ice);font-size:12px;font-weight:750;margin:13px 0 6px}input,textarea,select{width:100%;background:#071827;border:1px solid #294a64;border-radius:11px;padding:12px 13px;color:var(--text);outline:none}textarea{min-height:110px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #65c4f422}input::placeholder,textarea::placeholder{color:#668198}
+button.action{border:1px solid #3c86b3;background:linear-gradient(135deg,#1c6592,#17466b);color:#effaff;border-radius:11px;padding:10px 15px;font-weight:800}button.action:hover{filter:brightness(1.15)}button.secondary{background:#0a1d2e;border:1px solid var(--line);color:var(--ice);border-radius:11px;padding:10px 14px;font-weight:700}button.secondary:hover{background:#12334c;border-color:#3b779e}button.danger{background:#351e31;border:1px solid #70405c;color:#ffdce8;border-radius:11px;padding:9px 12px;font-weight:700}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.message{min-height:24px;margin-top:10px;font-size:13px;color:var(--muted)}.message.good{color:var(--green)}.message.bad{color:var(--red)}.cardgrid{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:5px;margin-top:12px}.pick{padding:7px 0;border-radius:7px;background:linear-gradient(160deg,#f2f9ff,#cfe6f5);color:#142d43;border:1px solid #9ebfd5;font-size:12px;font-weight:850}.pick.red{color:#c53d55}.pick:disabled{opacity:.2;cursor:not-allowed;text-decoration:line-through}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}.pill{font-size:11px;color:var(--ice);border:1px solid #315d7c;border-radius:30px;padding:4px 9px;white-space:nowrap}.list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#091b2b;border:1px solid var(--line);padding:11px 12px;border-radius:12px}.item small{color:var(--muted)}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;width:100%;font-size:13px;min-width:440px}th,td{text-align:left;padding:10px 11px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:700;background:#0a1d2d}td{color:var(--ice)}tr:last-child td{border-bottom:0}.bar{height:7px;background:#061321;border-radius:8px;overflow:hidden;min-width:90px;margin-top:4px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#318fca,#a1e3ff);border-radius:8px}.note{font-size:12px;color:var(--muted);margin-top:12px}.hidden{display:none!important}.full{grid-column:1/-1}.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed #31516b;border-radius:13px;background:#091b2a66}.searchrow{display:flex;gap:10px;align-items:center;margin-top:12px}.searchrow input{max-width:360px}.footer{font-size:11px;color:#718da4;text-align:center;margin-top:30px;letter-spacing:.04em}
+@media(max-width:850px){.app{padding:20px 16px 100px}.grid,.dashboard-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cardgrid{grid-template-columns:repeat(7,minmax(0,1fr))}.welcome-mark{display:none}}
+@media(max-width:560px){.app{padding:16px 13px 100px}.topbar{margin-bottom:23px}.top-status{font-size:0;padding:10px}.top-status .status-text{display:none}.welcome{margin-bottom:18px}.welcome h1{font-size:34px}.nav{position:fixed;z-index:20;bottom:10px;left:10px;right:10px;width:auto;justify-content:space-around;margin:0;padding:6px;background:#081827f2;backdrop-filter:blur(16px);box-shadow:0 10px 35px #0009}.nav button{flex:1;padding:11px 4px;font-size:11px}.nav button .nav-icon{display:block;font-size:17px;margin-bottom:1px}.panel{padding:16px;border-radius:17px}.quick-actions{grid-template-columns:1fr 1fr}.item{align-items:flex-start}.item button{padding:8px 10px}.searchrow{display:block}.searchrow input{max-width:none}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header class="hero"><div><div class="eyebrow">52 CARDS · INFINITE POSSIBILITIES</div><h1>SHUFFLE LAB</h1><p>Il diario dei tuoi mescolamenti. Registra, confronta, scopri.</p></div><div class="mark">♠ ♥ ♣ ♦ &nbsp; LAB / 001</div></header>
-<div class="stats">
- <div class="stat"><b id="total">0</b><span>MESCOLAMENTI</span></div>
- <div class="stat"><b id="unique">0</b><span>SEQUENZE UNICHE</span></div>
- <div class="stat"><b id="repeats">0</b><span>RIPETIZIONI ESATTE</span></div>
- <div class="stat"><b id="best">—</b><span>PIÙ SIMILI TRA LORO</span></div>
-</div>
-<div class="grid">
-<section class="panel">
- <h2>01 / Registra un mescolamento</h2><p class="sub">Inserisci l'ordine delle 52 carte. Puoi scriverlo oppure selezionare le carte qui sotto.</p>
- <label for="label">Nome o nota (facoltativo)</label><input id="label" maxlength="60" placeholder="Es. Mescolamento dopo 7 riffle shuffle">
- <label for="sequence">Sequenza delle carte</label>
- <textarea id="sequence" placeholder="Esempio: A♠, 2♠, 3♠, ...&#10;Puoi usare A, K, Q, J, 10–2 e i semi ♠ ♥ ♦ ♣. Separale con spazi, virgole o a capo."></textarea>
- <div class="actions"><button id="save">＋ Salva mescolamento</button><button class="secondary" id="clearInput">Pulisci</button><button class="secondary" id="sort">Ordine iniziale standard</button></div>
- <div class="message" id="entryMsg">Servono tutte le 52 carte, ciascuna esattamente una volta.</div>
- <div class="topline" style="margin-top:18px"><div><b>Selezione rapida</b><div class="sub" style="margin:2px 0 0">Tocca le carte nell'ordine in cui le trovi.</div></div><span class="pill" id="pickedCount">0 / 52</span></div>
- <div class="cardgrid" id="picker"></div>
- <div class="actions"><button class="secondary" id="undo">Annulla ultima</button><button class="secondary" id="pickerClear">Azzera selezione</button><button class="secondary" id="usePicked">Usa selezione nel campo</button></div>
- <p class="note">Notazione: A = asso, K = re, Q = donna, J = fante. I semi sono ♠ picche, ♥ cuori, ♦ quadri, ♣ fiori. Sono accettati anche AS, KH, 10D, 7C ecc.</p>
+<div class="app">
+<header class="topbar">
+ <div class="brand"><div class="brandmark">♠</div><div><div class="brandname">SHUFFLE LAB</div><div class="brandtag">52 CARDS · INFINITE POSSIBILITIES</div></div></div>
+ <div class="top-status"><span class="statusdot"></span><span class="status-text">LABORATORIO PERSONALE · DATI LOCALI</span></div>
+</header>
+<div class="welcome"><div><div class="eyebrow">Il tuo spazio di ricerca</div><h1>Ogni shuffle racconta<br>una storia.</h1><p>Registra i tuoi mescolamenti, confronta le sequenze e osserva come si distribuiscono le 52 carte.</p></div><div class="welcome-mark"><strong>LAB / 001</strong>♠ &nbsp;♥ &nbsp;♣ &nbsp;♦</div></div>
+<nav class="nav" aria-label="Navigazione principale">
+ <button class="active" data-view="home"><span class="nav-icon">⌂</span> Panoramica</button>
+ <button data-view="register"><span class="nav-icon">＋</span> Registra</button>
+ <button data-view="archive"><span class="nav-icon">▤</span> Archivio</button>
+ <button data-view="analysis"><span class="nav-icon">⌁</span> Analisi</button>
+</nav>
+<main>
+<section class="view active" id="view-home">
+ <div class="section-head"><div><div class="eyebrow">Dashboard</div><h2>La tua panoramica</h2><p>Una vista rapida dei dati raccolti finora.</p></div></div>
+ <div class="stats">
+  <div class="stat"><b id="total">0</b><span>MESCOLAMENTI</span></div>
+  <div class="stat"><b id="unique">0</b><span>SEQUENZE UNICHE</span></div>
+  <div class="stat"><b id="repeats">0</b><span>RIPETIZIONI ESATTE</span></div>
+  <div class="stat"><b id="best">—</b><span>PIÙ SIMILI · DISTANZA</span></div>
+ </div>
+ <div class="dashboard-grid">
+  <section class="panel welcome-card"><div><div class="eyebrow">Pronto per un nuovo esperimento?</div><h3>Il prossimo mescolamento è tutto da scoprire.</h3><p>Aggiungi una sequenza al tuo archivio e lascia che Shuffle Lab aggiorni automaticamente le statistiche.</p></div><div class="actions"><button class="action" data-go="register">＋ Nuovo mescolamento</button><button class="secondary" data-go="analysis">Esplora le analisi</button></div></section>
+  <section class="panel"><h3>Accesso rapido</h3><p class="sub">Vai direttamente alla funzione che ti serve.</p><div class="quick-actions">
+   <button class="quick" data-go="register"><span>＋</span><b>Registra</b><small>Inserisci 52 carte</small></button>
+   <button class="quick" data-go="archive"><span>▤</span><b>Archivio</b><small>Rivedi i tuoi dati</small></button>
+   <button class="quick" data-go="analysis"><span>⌁</span><b>Confronta</b><small>Scopri le differenze</small></button>
+   <button class="quick" id="homeBackup"><span>⇩</span><b>Backup</b><small>Salva una copia JSON</small></button>
+  </div></section>
+ </div>
+ <section class="panel" style="margin-top:16px"><div class="topline"><div><h3>Il tuo laboratorio</h3><p class="sub" style="margin:3px 0 0">I dati rimangono salvati nel browser di questo dispositivo.</p></div><span class="pill">LOCAL STORAGE</span></div><p class="note">Consiglio: esporta periodicamente un backup JSON per conservare lo storico anche se cambi browser o dispositivo. La modalità offline continua a essere gestita dal service worker già installato.</p></section>
 </section>
-<section class="panel">
- <h2>02 / Archivio</h2><p class="sub">I tuoi dati restano salvati in questo browser su questo dispositivo.</p>
- <div class="actions"><button class="secondary" id="export">Esporta CSV</button><button class="secondary" id="backup">Backup JSON</button><button class="secondary" id="importBtn">Importa JSON</button><input type="file" id="file" accept=".json,application/json" class="hidden"></div>
- <div id="archive" class="list"><div class="empty">Ancora nessun mescolamento registrato.</div></div>
- <div class="actions"><button class="danger" id="deleteAll">Elimina tutto</button></div>
- <p class="note">Esporta periodicamente un backup se vuoi conservare lo storico anche cambiando browser o dispositivo.</p>
+<section class="view" id="view-register">
+ <div class="section-head"><div><div class="eyebrow">01 / Inserimento dati</div><h2>Registra un mescolamento</h2><p>Inserisci l'ordine delle 52 carte, scrivendolo oppure selezionandole.</p></div></div>
+ <section class="panel">
+  <label for="label">Nome o nota <span style="color:var(--muted);font-weight:500">(facoltativo)</span></label><input id="label" maxlength="60" placeholder="Es. Mescolamento dopo 7 riffle shuffle">
+  <label for="sequence">Sequenza delle carte</label><textarea id="sequence" placeholder="Esempio: A♠, 2♠, 3♠, ...&#10;Puoi usare A, K, Q, J, 10–2 e i semi ♠ ♥ ♦ ♣. Separale con spazi, virgole o a capo."></textarea>
+  <div class="actions"><button class="action" id="save">＋ Salva mescolamento</button><button class="secondary" id="clearInput">Pulisci</button><button class="secondary" id="sort">Ordine iniziale standard</button></div>
+  <div class="message" id="entryMsg">Servono tutte le 52 carte, ciascuna esattamente una volta.</div>
+  <div class="topline" style="margin-top:22px"><div><b>Selezione rapida</b><div class="sub" style="margin:2px 0 0">Tocca le carte nell'ordine in cui le trovi.</div></div><span class="pill" id="pickedCount">0 / 52</span></div>
+  <div class="cardgrid" id="picker"></div>
+  <div class="actions"><button class="secondary" id="undo">Annulla ultima</button><button class="secondary" id="pickerClear">Azzera selezione</button><button class="secondary" id="usePicked">Usa selezione nel campo</button></div>
+  <p class="note">Notazione: A = asso, K = re, Q = donna, J = fante. I semi sono ♠ picche, ♥ cuori, ♦ quadri, ♣ fiori. Sono accettati anche AS, KH, 10D, 7C ecc.</p>
+ </section>
 </section>
-<section class="panel full">
- <h2>03 / Confronto tra mescolamenti</h2><p class="sub">La distanza qui è il numero di carte che occupano una posizione diversa. 52/52 significa che nessuna carta è rimasta al suo posto.</p>
- <div id="comparison" class="empty">Registra almeno due mescolamenti per vedere il confronto.</div>
+<section class="view" id="view-archive">
+ <div class="section-head"><div><div class="eyebrow">02 / Storico</div><h2>Il tuo archivio</h2><p>Tutti i mescolamenti che hai registrato su questo dispositivo.</p></div></div>
+ <section class="panel">
+  <div class="actions" style="margin-top:0"><button class="secondary" id="export">Esporta CSV</button><button class="secondary" id="backup">Backup JSON</button><button class="secondary" id="importBtn">Importa JSON</button><input type="file" id="file" accept=".json,application/json" class="hidden"></div>
+  <div class="searchrow"><input id="archiveSearch" type="search" placeholder="Cerca per nome o numero…" aria-label="Cerca nell'archivio"></div>
+  <div id="archive" class="list"><div class="empty">Ancora nessun mescolamento registrato.</div></div>
+  <div class="actions"><button class="danger" id="deleteAll">Elimina tutto</button></div>
+  <p class="note">Esporta periodicamente un backup se vuoi conservare lo storico anche cambiando browser o dispositivo.</p>
+ </section>
 </section>
-<section class="panel full">
- <h2>04 / Analisi delle posizioni</h2><p class="sub">Quante volte ogni carta è comparsa in ciascuna posizione? Le statistiche si aggiornano con il tuo archivio.</p>
- <div id="positions" class="empty">Registra almeno un mescolamento per iniziare l'analisi.</div>
+<section class="view" id="view-analysis">
+ <div class="section-head"><div><div class="eyebrow">03 / Osservazione</div><h2>Analisi e confronti</h2><p>Esplora le somiglianze tra sequenze e la distribuzione delle carte.</p></div></div>
+ <section class="panel"><h3>Confronto tra mescolamenti</h3><p class="sub">La distanza è il numero di carte che occupano una posizione diversa. 52/52 significa che nessuna carta è rimasta al suo posto.</p><div id="comparison" class="empty">Registra almeno due mescolamenti per vedere il confronto.</div></section>
+ <section class="panel" style="margin-top:16px"><h3>Analisi delle posizioni</h3><p class="sub">Quante volte ogni carta è comparsa in ciascuna posizione? Le statistiche si aggiornano con il tuo archivio.</p><div id="positions" class="empty">Registra almeno un mescolamento per iniziare l'analisi.</div></section>
+ <section class="panel" style="margin-top:16px"><h3>Analisi della singola carta</h3><p class="sub">Scegli una carta e scopri dove è comparsa nei tuoi mescolamenti.</p><label for="cardAnalysisSelect">Seleziona una carta</label><select id="cardAnalysisSelect"></select><div id="cardAnalysis" class="empty" style="margin-top:14px">Registra almeno un mescolamento per iniziare.</div></section>
 </section>
-<section class="panel full">
- <h2>05 / Analisi della singola carta</h2>
-  <p class="sub">Scegli una carta e scopri dove è comparsa nei tuoi mescolamenti.</p>
-
-  <label for="cardAnalysisSelect">Seleziona una carta</label>
-  <select id="cardAnalysisSelect"></select>
-
-  <div id="cardAnalysis" class="empty">
-    Registra almeno un mescolamento per iniziare.
-  </div>
-</section>
-</div>
-<p class="note" style="text-align:center;margin-top:20px">SHUFFLE LAB · Un esperimento personale sulla casualità. Le statistiche descrivono i dati raccolti: non dimostrano da sole che il mescolamento sia perfettamente casuale.</p>
+</main>
+<footer class="footer">SHUFFLE LAB · Un esperimento personale sulla casualità. Le statistiche descrivono i dati raccolti: non dimostrano da sole che il mescolamento sia perfettamente casuale.</footer>
 </div>
 <script>
 const suits=['♠','♥','♦','♣'], ranks=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
@@ -93,17 +107,15 @@ function update(){
  $('unique').textContent=new Set(records.map(r=>r.cards.join(' '))).size;
  $('repeats').textContent=records.length-new Set(records.map(r=>r.cards.join(' '))).size;
  let pair=closestPair();$('best').textContent=pair?pair.distance+'/52':'—';
- renderArchive();
- renderCompare();
- renderPositions();
- renderCardAnalysis();
- saveLocal();
+ renderArchive();renderCompare();renderPositions();renderCardAnalysis();saveLocal();
 }
 function saveLocal(){try{localStorage.setItem('shuffleLabRecords',JSON.stringify(records))}catch(e){}}
 function closestPair(){if(records.length<2)return null;let best=null;for(let i=0;i<records.length;i++)for(let j=i+1;j<records.length;j++){let d=records[i].cards.reduce((n,c,k)=>n+(c!==records[j].cards[k]),0);if(!best||d<best.distance)best={a:i,b:j,distance:d}}return best}
 function renderArchive(){
- let el=$('archive');if(!records.length){el.innerHTML='<div class="empty">Ancora nessun mescolamento registrato.</div>';return}
- el.innerHTML='';[...records].reverse().forEach(r=>{let d=document.createElement('div');d.className='item';let left=document.createElement('div');left.innerHTML='<b>#'+r.id+' '+escapeHtml(r.name||'Senza nome')+'</b><br><small>'+new Date(r.date).toLocaleString('it-IT')+'</small>';let right=document.createElement('div');right.style.display='flex';right.style.gap='6px';let view=document.createElement('button');view.className='secondary';view.textContent='Vedi';view.onclick=()=>{$('sequence').value=r.cards.join(' ');$('label').value=r.name||'';window.scrollTo({top:0,behavior:'smooth'})};let del=document.createElement('button');del.className='danger';del.textContent='×';del.title='Elimina';del.onclick=()=>{if(confirm('Eliminare il mescolamento #'+r.id+'?')){records=records.filter(x=>x.id!==r.id);update()}};right.append(view,del);d.append(left,right);el.append(d)});
+ let el=$('archive');let query=($('archiveSearch')?.value||'').trim().toLowerCase();let filtered=[...records].reverse().filter(r=>('#'+r.id+' '+(r.name||'Senza nome')).toLowerCase().includes(query));
+ if(!records.length){el.innerHTML='<div class="empty">Ancora nessun mescolamento registrato.</div>';return}
+ if(!filtered.length){el.innerHTML='<div class="empty">Nessun risultato per questa ricerca.</div>';return}
+ el.innerHTML='';filtered.forEach(r=>{let d=document.createElement('div');d.className='item';let left=document.createElement('div');left.innerHTML='<b>#'+r.id+' '+escapeHtml(r.name||'Senza nome')+'</b><br><small>'+new Date(r.date).toLocaleString('it-IT')+'</small>';let right=document.createElement('div');right.style.display='flex';right.style.gap='6px';let view=document.createElement('button');view.className='secondary';view.textContent='Vedi';view.onclick=()=>{$('sequence').value=r.cards.join(' ');$('label').value=r.name||'';showView('register');window.scrollTo({top:0,behavior:'smooth'})};let del=document.createElement('button');del.className='danger';del.textContent='×';del.title='Elimina';del.onclick=()=>{if(confirm('Eliminare il mescolamento #'+r.id+'?')){records=records.filter(x=>x.id!==r.id);update()}};right.append(view,del);d.append(left,right);el.append(d)});
 }
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function renderCompare(){
@@ -118,95 +130,36 @@ function renderPositions(){
  let rows=counts.map((o,i)=>{let arr=Object.entries(o).sort((a,b)=>b[1]-a[1]);let top=arr[0];return {pos:i+1,card:top[0],count:top[1],pct:top[1]/records.length*100,distinct:arr.length}}).sort((a,b)=>b.pct-a.pct);
  el.className='tablewrap';el.innerHTML='<table><thead><tr><th>Posizione</th><th>Carta più frequente</th><th>Frequenza</th><th>Carte diverse viste</th></tr></thead><tbody>'+rows.map(x=>'<tr><td>'+x.pos+'</td><td>'+x.card+'</td><td>'+x.count+'/'+records.length+' <div class="bar"><i style="width:'+x.pct+'%"></i></div></td><td>'+x.distinct+'</td></tr>').join('')+'</tbody></table><p class="note">Attenzione: con pochi mescolamenti le frequenze oscillano molto. La tabella mostra la carta più frequente per ogni posizione, non una previsione.</p>';
 }
- function renderCardAnalysis(){
-  const card = $('cardAnalysisSelect').value;
-  const el = $('cardAnalysis');
-
-  if(!records.length){
-    el.className = 'empty';
-    el.textContent = 'Registra almeno un mescolamento per iniziare.';
-    return;
-  }
-
-  const positions = Array(52).fill(0);
-
-  records.forEach(r => {
-    const index = r.cards.indexOf(card);
-    if(index >= 0) positions[index]++;
-  });
-
-  const occurrences = positions.reduce((a,b)=>a+b,0);
-  const mostCommon = Math.max(...positions);
-  const commonPositions = positions
-    .map((count,i)=>({position:i+1,count}))
-    .filter(x=>x.count===mostCommon && x.count>0);
-
-  el.className = 'tablewrap';
-  el.innerHTML = `
-    <div class="stats">
-      <div class="stat">
-        <b>${occurrences}</b>
-        <span>PRESENZE REGISTRATE</span>
-      </div>
-      <div class="stat">
-        <b>${commonPositions.length ? commonPositions.map(x=>x.position).join(', ') : '—'}</b>
-        <span>POSIZIONE/I PIÙ FREQUENTE/I</span>
-      </div>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Posizione</th>
-          <th>Frequenza</th>
-          <th>Distribuzione</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${positions.map((count,i)=>`
-          <tr>
-            <td>${i+1}</td>
-            <td>${count}/${records.length}</td>
-            <td>
-              <div class="bar">
-                <i style="width:${count/records.length*100}%"></i>
-              </div>
-            </td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-    <p class="note">
-      Ogni riga indica quante volte ${card} è comparsa in quella posizione.
-    </p>
-  `;
+function renderCardAnalysis(){
+ const card=$('cardAnalysisSelect').value;const el=$('cardAnalysis');if(!records.length){el.className='empty';el.textContent='Registra almeno un mescolamento per iniziare.';return}
+ const positions=Array(52).fill(0);records.forEach(r=>{const index=r.cards.indexOf(card);if(index>=0)positions[index]++});
+ const occurrences=positions.reduce((a,b)=>a+b,0);const mostCommon=Math.max(...positions);const commonPositions=positions.map((count,i)=>({position:i+1,count})).filter(x=>x.count===mostCommon&&x.count>0);
+ el.className='tablewrap';el.innerHTML=`<div class="stats" style="padding:12px 12px 0"><div class="stat"><b>${occurrences}</b><span>PRESENZE REGISTRATE</span></div><div class="stat"><b>${commonPositions.length?commonPositions.map(x=>x.position).join(', '):'—'}</b><span>POSIZIONE/I PIÙ FREQUENTE/I</span></div></div><table><thead><tr><th>Posizione</th><th>Frequenza</th><th>Distribuzione</th></tr></thead><tbody>${positions.map((count,i)=>`<tr><td>${i+1}</td><td>${count}/${records.length}</td><td><div class="bar"><i style="width:${count/records.length*100}%"></i></div></td></tr>`).join('')}</tbody></table><p class="note" style="padding:0 12px 12px">Ogni riga indica quante volte ${card} è comparsa in quella posizione.</p>`;
 }
- $('cardAnalysisSelect').innerHTML = deck.map(c =>
-  `<option value="${c}">${c}</option>`
-).join('');
-
-$('cardAnalysisSelect').onchange = renderCardAnalysis;
+$('cardAnalysisSelect').innerHTML=deck.map(c=>`<option value="${c}">${c}</option>`).join('');$('cardAnalysisSelect').onchange=renderCardAnalysis;
 function setMsg(msg,good){$('entryMsg').textContent=msg;$('entryMsg').className='message '+(good?'good':'bad')}
-$('save').onclick=()=>{let seq=parseSequence($('sequence').value),err=valid(seq);if(err){setMsg(err,false);return}let id=records.reduce((m,r)=>Math.max(m,r.id),0)+1;records.push({id,name:$('label').value.trim(),date:new Date().toISOString(),cards:seq});$('label').value='';$('sequence').value='';picked=[];renderPicker();setMsg('Mescolamento #'+id+' salvato correttamente.',true);update()};
+$('save').onclick=()=>{let seq=parseSequence($('sequence').value),err=valid(seq);if(err){setMsg(err,false);return}let id=records.reduce((m,r)=>Math.max(m,r.id),0)+1;records.push({id,name:$('label').value.trim(),date:new Date().toISOString(),cards:seq});$('label').value='';$('sequence').value='';picked=[];renderPicker();setMsg('Mescolamento #'+id+' salvato correttamente.',true);update();showView('home')};
 $('clearInput').onclick=()=>{$('sequence').value='';$('label').value='';setMsg('Campo svuotato.',true)};
 $('sort').onclick=()=>{$('sequence').value=deck.join(' ');setMsg('Ordine standard inserito. Puoi modificarlo prima di salvare.',true)};
 function renderPicker(){let el=$('picker');el.innerHTML='';deck.forEach(c=>{let b=document.createElement('button');b.className='pick '+('♥♦'.includes(c.slice(-1))?'red':'');b.textContent=c;b.disabled=picked.includes(c);b.onclick=()=>{picked.push(c);$('pickedCount').textContent=picked.length+' / 52';renderPicker()};el.append(b)});$('pickedCount').textContent=picked.length+' / 52'}
 $('undo').onclick=()=>{picked.pop();renderPicker()};$('pickerClear').onclick=()=>{picked=[];renderPicker()};$('usePicked').onclick=()=>{if(!picked.length){setMsg('Seleziona prima qualche carta.',false);return}$('sequence').value=picked.join(' ');setMsg('Sequenza trasferita nel campo. Completa le 52 carte e salva.',true)};
 $('export').onclick=()=>{let csv='id,nome,data,sequenza\n'+records.map(r=>[r.id,'"'+(r.name||'').replace(/"/g,'""')+'"',r.date,'"'+r.cards.join(' ')+'"'].join(',')).join('\n');download('shuffle-lab.csv',csv,'text/csv')};
 $('backup').onclick=()=>download('shuffle-lab-backup.json',JSON.stringify(records,null,2),'application/json');
-function download(name,data,type){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([data],{type}));a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+function download(name,data,type){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([data],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+$('homeBackup').onclick=()=>$('backup').click();
 $('importBtn').onclick=()=>$('file').click();$('file').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let data=JSON.parse(await f.text());if(!Array.isArray(data)||data.some(r=>!r.cards||valid(r.cards)))throw Error('Formato non valido');if(confirm('Importare '+data.length+' mescolamenti? Quelli con ID già esistente verranno rinumerati.')){let next=records.reduce((m,r)=>Math.max(m,r.id),0)+1;data.forEach(r=>{r.id=next++;records.push(r)});update();setMsg('Importazione completata.',true)}}catch(err){setMsg('Impossibile importare: '+err.message,false)}e.target.value=''};
-$('deleteAll').onclick=()=>{if(records.length&&confirm('Vuoi eliminare definitivamente tutto lo storico salvato in questo browser?')){records=[];update();setMsg('Archivio eliminato.',true)}};
+$('deleteAll').onclick=()=>{if(records.length&&confirm('Vuoi eliminare definitivamente tutto lo storico salvato in questo browser?')){records=[];update()}};
+$('archiveSearch').addEventListener('input',renderArchive);
+function showView(name){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+name));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.go)));
 try{let stored=JSON.parse(localStorage.getItem('shuffleLabRecords')||'[]');if(Array.isArray(stored))records=stored.filter(r=>r&&Array.isArray(r.cards)&&!valid(r.cards))}catch(e){}
 renderPicker();update();
 </script>
- 
- <script>
+<script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .catch(error => console.error('Errore PWA:', error));
-  });
+ window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(error=>console.error('Errore PWA:',error));});
 }
 </script>
- 
-</body></html>
+</body>
+</html>
