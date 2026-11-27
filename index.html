@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#071522">
 <link rel="manifest" href="./manifest.json">
-<title>Shuffle Lab 5.1 — Advanced Statistics</title>
+<title>Shuffle Lab 6.0 CLOUD — Advanced Statistics</title>
 
 
 
@@ -245,7 +245,7 @@ td{color:#d5edff}
    <div class="brandtag">52 CARDS · INFINITE POSSIBILITIES</div>
   </div>
  </div>
- <div class="status">● LABORATORIO 5.1</div>
+ <div class="status" id="cloudStatus">● COLLEGAMENTO CLOUD…</div>
 </header>
 
 <div class="welcome">
@@ -345,10 +345,11 @@ td{color:#d5edff}
    <button class="secondary" id="importBtn">Importa JSON</button>
    <input type="file" id="file" accept=".json,application/json" class="hidden">
   </div>
+  <p class="note">Archivio condiviso: i record sono visibili a tutti e non possono essere modificati o eliminati dall’interfaccia.</p>
   <label for="archiveSearch">Cerca nell'archivio</label>
   <input id="archiveSearch" placeholder="Nome o numero">
   <div id="archive" class="list"><div class="empty">Ancora nessun mescolamento.</div></div>
-  <div class="actions"><button class="danger" id="deleteAll">Elimina tutto</button></div>
+  <div class="actions"></div>
  </div>
 </section>
 
@@ -513,8 +514,10 @@ td{color:#d5edff}
 </section>
 
 </main>
-<footer class="footer">SHUFFLE LAB 5.1 · Un laboratorio personale sulla casualità. Le simulazioni sono modelli matematici e non dimostrano da sole la casualità di un mescolamento reale.</footer>
+<footer class="footer">SHUFFLE LAB 6.0 CLOUD · Archivio condiviso sulla casualità. Le simulazioni sono modelli matematici e non dimostrano da sole la casualità di un mescolamento reale.</footer>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 /* ==========================================
@@ -536,6 +539,77 @@ let experiments=[];
 
 const RECORDS_KEY='shuffleLabRecords';
 const EXPERIMENTS_KEY='shuffleLabExperimentsV1';
+
+// Configurazione pubblica Supabase: la publishable key è progettata per il client.
+const SUPABASE_URL='https://rooaydnytjuhuzcmcqdc.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_pBUnCReF9qJEMuduaoVNqg_0m3xgBcQ';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let cloudReady=false;
+let localLegacyRecords=[];
+
+function setCloudStatus(message,good=false){
+ const el=$('cloudStatus');
+ if(!el)return;
+ el.textContent=message;
+ el.style.color=good?'var(--green)':'var(--cyan)';
+}
+
+function makeRecordId(prefix='SL'){
+ const random=window.crypto&&crypto.randomUUID?crypto.randomUUID().replace(/-/g,'').slice(0,10):Math.random().toString(36).slice(2,12);
+ return prefix+'-'+Date.now().toString(36)+'-'+random;
+}
+
+function normalizeCloudRecord(row){
+ return {id:String(row.id),name:String(row.name||''),date:row.date,cards:Array.isArray(row.cards)?row.cards:[]};
+}
+
+async function fetchCloudRecords(){
+ const {data,error}=await supabaseClient.from('shuffle_records').select('id,name,date,cards,created_at').order('created_at',{ascending:false});
+ if(error)throw error;
+ return (data||[]).map(normalizeCloudRecord).filter(r=>!validateSequence(r.cards));
+}
+
+async function insertCloudRecord(record){
+ const payload={id:String(record.id),name:String(record.name||''),date:String(record.date||new Date().toISOString()),cards:record.cards};
+ const {data,error}=await supabaseClient.from('shuffle_records').insert([payload]).select('id,name,date,cards').single();
+ if(error)throw error;
+ return normalizeCloudRecord(data);
+}
+
+async function initializeCloud(){
+ setCloudStatus('● CONNESSIONE CLOUD…');
+ try{
+  // Migrazione una tantum dei record già presenti sul dispositivo.
+  if(localLegacyRecords.length && localStorage.getItem('shuffleLabCloudMigrationV1')!=='done'){
+   let deviceId=localStorage.getItem('shuffleLabCloudDeviceId');
+   if(!deviceId){deviceId=makeRecordId('DEVICE');localStorage.setItem('shuffleLabCloudDeviceId',deviceId);}
+   let migrationHadError=false;
+   for(const old of localLegacyRecords){
+    const legacyId='legacy-'+deviceId+'-'+String(old.id);
+    try{
+     await insertCloudRecord({id:legacyId,name:old.name,date:old.date,cards:old.cards});
+    }catch(error){
+     // Un conflitto significa che quel record era già stato migrato.
+     if(error.code!=='23505'){migrationHadError=true;console.warn('Migrazione record non riuscita',error);}
+    }
+   }
+   if(migrationHadError) setCloudStatus('● CLOUD · MIGRAZIONE PARZIALE');
+   else localStorage.setItem('shuffleLabCloudMigrationV1','done');
+  }
+  records=await fetchCloudRecords();
+  cloudReady=true;
+  updateRecords();
+  setCloudStatus('● CLOUD CONNESSO · '+records.length+' RECORD',true);
+ }catch(error){
+  console.error('Connessione Supabase non riuscita:',error);
+  cloudReady=false;
+  records=[];
+  updateRecords();
+  setCloudStatus('● ERRORE CLOUD · CONTROLLA CONFIGURAZIONE');
+  showMessage('entryMsg','Non riesco a collegarmi all’archivio cloud. Controlla la connessione e le impostazioni Supabase.');
+ }
+}
+
 
 function parseCard(token){
  let t=String(token).trim().toUpperCase()
@@ -568,10 +642,7 @@ function escapeHTML(value){
  }[c]));
 }
 
-function saveRecords(){
- try{localStorage.setItem(RECORDS_KEY,JSON.stringify(records))}
- catch(e){console.error('Salvataggio archivio non riuscito',e)}
-}
+function saveRecords(){ /* L'archivio principale è salvato su Supabase. */ }
 
 function saveExperiments(){
  try{localStorage.setItem(EXPERIMENTS_KEY,JSON.stringify(experiments))}
@@ -634,24 +705,29 @@ function renderPicker(){
  $('pickedCount').textContent=picked.length+' / 52';
 }
 
-$('save').onclick=()=>{
+$('save').onclick=async()=>{
+ const button=$('save');
  const seq=parseSequence($('sequence').value);
  const error=validateSequence(seq);
  if(error){setEntryMessage(error);return;}
- const id=records.reduce((m,r)=>Math.max(m,Number(r.id)||0),0)+1;
- records.push({
-  id,
-  name:$('label').value.trim(),
-  date:new Date().toISOString(),
-  cards:seq
- });
- $('label').value='';
- $('sequence').value='';
- picked=[];
- renderPicker();
- updateRecords();
- setEntryMessage('Mescolamento #'+id+' salvato correttamente.',true);
- showView('home');
+ if(!cloudReady){setEntryMessage('Archivio cloud non disponibile: il mescolamento non è stato salvato.');return;}
+ button.disabled=true;
+ const record={id:makeRecordId(),name:$('label').value.trim(),date:new Date().toISOString(),cards:seq};
+ try{
+  const saved=await insertCloudRecord(record);
+  records.unshift(saved);
+  $('label').value='';
+  $('sequence').value='';
+  picked=[];
+  renderPicker();
+  updateRecords();
+  setEntryMessage('Mescolamento salvato nell’archivio condiviso.',true);
+  setCloudStatus('● CLOUD CONNESSO · '+records.length+' RECORD',true);
+  showView('home');
+ }catch(error){
+  console.error(error);
+  setEntryMessage('Salvataggio cloud non riuscito. Riprova tra poco.');
+ }finally{button.disabled=false;}
 };
 
 $('clearInput').onclick=()=>{
@@ -678,49 +754,20 @@ $('usePicked').onclick=()=>{
 function renderArchive(){
  const el=$('archive');
  const query=($('archiveSearch').value||'').trim().toLowerCase();
- const filtered=[...records].reverse().filter(r=>
-  ('#'+r.id+' '+(r.name||'Senza nome')).toLowerCase().includes(query)
+ const filtered=[...records].filter(r=>
+  ('#'+r.id+' '+(r.name||'Senza nome')+' '+r.date).toLowerCase().includes(query)
  );
- if(!records.length){
-  el.innerHTML='<div class="empty">Ancora nessun mescolamento.</div>';
-  return;
- }
- if(!filtered.length){
-  el.innerHTML='<div class="empty">Nessun risultato.</div>';
-  return;
- }
+ if(!records.length){el.innerHTML='<div class="empty">Ancora nessun mescolamento nell’archivio condiviso.</div>';return;}
+ if(!filtered.length){el.innerHTML='<div class="empty">Nessun risultato.</div>';return;}
  el.innerHTML='';
  filtered.forEach(r=>{
-  const item=document.createElement('div');
-  item.className='item';
+  const item=document.createElement('div'); item.className='item';
   const left=document.createElement('div');
-  left.innerHTML='<b>#'+r.id+' '+escapeHTML(r.name||'Senza nome')+
-   '</b><br><small>'+new Date(r.date).toLocaleString('it-IT')+'</small>';
-  const right=document.createElement('div');
-  right.className='actions';
-  right.style.marginTop='0';
-
-  const view=document.createElement('button');
-  view.className='secondary';
-  view.textContent='Vedi';
-  view.onclick=()=>{
-   $('sequence').value=r.cards.join(' ');
-   $('label').value=r.name||'';
-   showView('register');
-  };
-
-  const del=document.createElement('button');
-  del.className='danger';
-  del.textContent='Elimina';
-  del.onclick=()=>{
-   if(confirm('Eliminare il mescolamento #'+r.id+'?')){
-    records=records.filter(x=>x.id!==r.id);
-    updateRecords();
-   }
-  };
-  right.append(view,del);
-  item.append(left,right);
-  el.append(item);
+  left.innerHTML='<b>'+escapeHTML(r.name||'Senza nome')+'</b><br><small>'+new Date(r.date).toLocaleString('it-IT')+' · ID '+escapeHTML(r.id)+'</small>';
+  const right=document.createElement('div'); right.className='actions'; right.style.marginTop='0';
+  const view=document.createElement('button'); view.className='secondary'; view.textContent='Vedi sequenza';
+  view.onclick=()=>{$('sequence').value=r.cards.join(' ');$('label').value=r.name||'';showView('register');};
+  right.append(view); item.append(left,right); el.append(item);
  });
 }
 
@@ -755,33 +802,22 @@ $('file').onchange=async e=>{
  if(!file)return;
  try{
   const data=JSON.parse(await file.text());
-  if(!Array.isArray(data)||data.some(r=>!r||!Array.isArray(r.cards)||validateSequence(r.cards))){
-   throw new Error('Il file non contiene un archivio valido.');
+  if(!Array.isArray(data)||data.some(r=>!r||!Array.isArray(r.cards)||validateSequence(r.cards))) throw new Error('Il file non contiene un archivio valido.');
+  if(!cloudReady)throw new Error('Archivio cloud non disponibile.');
+  if(confirm('Importare '+data.length+' mescolamenti nell’archivio condiviso?')){
+   let imported=0;
+   for(const r of data){
+    try{
+     await insertCloudRecord({id:makeRecordId('IMP'),name:String(r.name||''),date:r.date||new Date().toISOString(),cards:r.cards});
+     imported++;
+    }catch(error){console.warn('Record importato non riuscito',error);}
+   }
+   records=await fetchCloudRecords(); updateRecords();
+   setEntryMessage(imported+' mescolamenti importati nel cloud.',true);
+   setCloudStatus('● CLOUD CONNESSO · '+records.length+' RECORD',true);
   }
-  if(confirm('Importare '+data.length+' mescolamenti?')){
-   let next=records.reduce((m,r)=>Math.max(m,Number(r.id)||0),0)+1;
-   data.forEach(r=>{
-    records.push({
-     id:next++,
-     name:String(r.name||''),
-     date:r.date||new Date().toISOString(),
-     cards:r.cards
-    });
-   });
-   updateRecords();
-   setEntryMessage('Importazione completata.',true);
-  }
- }catch(err){
-  alert('Impossibile importare: '+err.message);
- }
+ }catch(err){alert('Impossibile importare: '+err.message);}
  e.target.value='';
-};
-
-$('deleteAll').onclick=()=>{
- if(records.length&&confirm('Eliminare definitivamente tutti i mescolamenti registrati?')){
-  records=[];
-  updateRecords();
- }
 };
 
 /* ANALISI */
@@ -991,7 +1027,6 @@ function updateRecords(){
  $('best').textContent=best===null?'—':best+'/52';
  renderArchive();
  renderAnalysis();
- saveRecords();
 }
 
 /* INIZIALIZZAZIONE */
@@ -1009,12 +1044,9 @@ $('advancedPositionSelect').onchange=renderRecoveredAnalytics;
 
 try{
  const saved=JSON.parse(localStorage.getItem(RECORDS_KEY)||'[]');
- if(Array.isArray(saved)){
-  records=saved.filter(r=>
-   r&&Array.isArray(r.cards)&&!validateSequence(r.cards)
-  );
- }
-}catch(e){records=[]}
+ if(Array.isArray(saved)) localLegacyRecords=saved.filter(r=>r&&Array.isArray(r.cards)&&!validateSequence(r.cards));
+}catch(e){localLegacyRecords=[]}
+records=[];
 
 try{
  const saved=JSON.parse(localStorage.getItem(EXPERIMENTS_KEY)||'[]');
@@ -1023,6 +1055,7 @@ try{
 
 renderPicker();
 updateRecords();
+initializeCloud();
 </script>
 
 <script>
